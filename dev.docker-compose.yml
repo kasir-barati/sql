@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/data/postgres
+    env_file:
+      - .postgresql.env
+
+volumes:
+  postgres:

@@ -1,0 +1,36 @@
+{
+  "name": "prisma-operator-precedence",
+  "version": "1.0.0",
+  "description": "operator precedence in Prisma",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compose:up": "docker-compose -f dev.docker-compose.yml up",
+    "compose:down": "docker-compose -f dev.docker-compose.yml down --remove-orphans",
+    "start:dev": "ts-node index.ts",
+    "prisma:dev": "npx prisma db push && npx prisma generate && npx prisma db seed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasir-barati/prisma-operator-precedence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kasir-barati/prisma-operator-precedence/issues"
+  },
+  "homepage": "https://github.com/kasir-barati/prisma-operator-precedence#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.41",
+    "prisma": "^3.15.0",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.15.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}
