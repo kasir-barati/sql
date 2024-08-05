@@ -1,26 +1,36 @@
 {
-  "name": "prisma-operator-precedence",
-  "version": "1.0.0",
-  "description": "operator precedence in Prisma",
+  "name": "awesome-sql-orm",
+  "version": "0.0.1",
+  "description": "Where I am gonna show you the ways of SQL and Prisma",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compose:up": "docker-compose -f dev.docker-compose.yml up",
-    "compose:down": "docker-compose -f dev.docker-compose.yml down --remove-orphans",
+    "compose:up": "docker compose -f dev.docker-compose.yml up",
+    "compose:down": "docker compose -f dev.docker-compose.yml down --remove-orphans",
     "start:dev": "ts-node index.ts",
     "prisma:dev": "npx prisma db push && npx prisma generate && npx prisma db seed"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kasir-barati/prisma-operator-precedence.git"
+    "url": "git+https://github.com/kasir-barati/awesome-sql-orm.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "docker",
+    "docker-compose",
+    "psql",
+    "prisma",
+    "postgresql",
+    "npm",
+    "nodejs",
+    "typescript",
+    "javascript"
+  ],
+  "author": "kasir-barati",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/kasir-barati/prisma-operator-precedence/issues"
+    "url": "https://github.com/kasir-barati/awesome-sql-orm/issues"
   },
-  "homepage": "https://github.com/kasir-barati/prisma-operator-precedence#readme",
+  "homepage": "https://github.com/kasir-barati/awesome-sql-orm#readme",
   "devDependencies": {
     "@types/node": "^17.0.41",
     "prisma": "^3.15.0",

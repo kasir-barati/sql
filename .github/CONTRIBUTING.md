@@ -1,7 +1,3 @@
-# prisma-operator-precedence
-
-operator precedence in Prisma
-
 # How to run the App:
 
 1. `npm ci`
