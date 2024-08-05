@@ -1,36 +1,38 @@
-import { PrismaClient } from "@prisma/client";
-
-// Instantiate Prisma Client
-const prisma = new PrismaClient();
+import { prisma } from '../src/shared/utils/prisma-client.util';
 
 async function main() {
   // A `main` function so that we can use async/await
   const count = await prisma.user.count({ where: {} });
 
   if (count === 0) {
-    console.log("Seed started");
+    console.log('Seed started');
 
     await prisma.user.createMany({
       data: [
         {
-          cityId: "TYO",
-          firstName: "Kasir",
+          email: 'asdoiunhcd@asdm.com',
+          cityId: 'TYO',
+          firstName: 'Kasir',
         },
         {
-          cityId: "TYO",
-          firstName: "Mohammad Jawad",
+          email: 'au123ASD@asd.com',
+          cityId: 'TYO',
+          firstName: 'Mohammad Jawad',
         },
         {
-          cityId: "TYO",
-          firstName: "Emir",
+          email: 'qomloa@asdzlp.com',
+          cityId: 'TYO',
+          firstName: 'Emir',
         },
         {
-          cityId: "NYC",
-          firstName: "Mohammad Jawad",
+          email: 'qwepmn@bvxzg.jp',
+          cityId: 'NYC',
+          firstName: 'Mohammad Jawad',
         },
         {
-          cityId: "BER",
-          firstName: "Kasir",
+          email: 'plmnb2345bhasd12@gp.jp',
+          cityId: 'BER',
+          firstName: 'Kasir',
         },
       ],
     });
@@ -39,7 +41,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log("Seed done");
+    console.log('Seed done');
   })
   .catch((e: Error) => {
     console.error(e);
