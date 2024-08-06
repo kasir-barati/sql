@@ -11,12 +11,13 @@ generator client {
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  email      String  @unique
-  firstName  String? @map("first_name")
-  middleName String? @map("middle_name")
-  lastName   String? @map("last_name")
-  cityId     String? @map("city_id")
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  firstName  String?  @map("first_name")
+  middleName String?  @map("middle_name")
+  lastName   String?  @map("last_name")
+  cityId     String?  @map("city_id")
+  birthdate  DateTime
 
   posts Post[]
 

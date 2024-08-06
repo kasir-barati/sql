@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { InsertUserUsingRawQuery } from '../types/user-raw-queries.type';
+import { UserDataRepresentationInDatabase } from '../types/user-raw-queries.type';
 import { UserRawQueryResultsSerializer } from './serializer.util';
 
 describe('UserRawQueryResultsSerializer', () => {
@@ -11,7 +11,7 @@ describe('UserRawQueryResultsSerializer', () => {
       new UserRawQueryResultsSerializer();
   });
 
-  it.each<InsertUserUsingRawQuery>([
+  it.each<UserDataRepresentationInDatabase>([
     {
       id: 12,
       city_id: 'TYO',
@@ -48,7 +48,7 @@ describe('UserRawQueryResultsSerializer', () => {
   );
 
   it('should serialize select all users', () => {
-    const unserialized: InsertUserUsingRawQuery[] = [
+    const unserialized: UserDataRepresentationInDatabase[] = [
       {
         id: 12,
         city_id: 'TYO',

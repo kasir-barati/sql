@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 import { UniqueEmailConstraints } from '../shared/types/unique-email-constraints.type';
 import { cleanup } from '../shared/utils/cleanup.util';
+import { generateRandomDate } from '../shared/utils/random.util';
 import { createUserUsingPrisma } from './create-user';
 
 describe('createUserUsingPrisma', () => {
@@ -14,12 +15,14 @@ describe('createUserUsingPrisma', () => {
       firstName: 'Mohammad',
       middleName: 'Jawad',
       lastName: 'Barati',
+      birthdate: generateRandomDate(),
     },
     {
       email: 'node.js.developers.kh@gmail.com',
       firstName: 'Mohammad',
       middleName: 'Jawad',
       lastName: 'Barati',
+      birthdate: generateRandomDate(),
     },
   ])('should create a user with this email: $email', async (data) => {
     const user = await createUserUsingPrisma(data);
@@ -33,6 +36,7 @@ describe('createUserUsingPrisma', () => {
       firstName: 'Mohammad',
       middleName: 'Jawad',
       lastName: 'Barati',
+      birthdate: generateRandomDate(),
     });
 
     await expect(result).rejects.toThrowError(UniqueEmailConstraints);

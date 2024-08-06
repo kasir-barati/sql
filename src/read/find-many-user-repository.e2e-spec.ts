@@ -1,19 +1,22 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { createUserUsingPrisma } from '../create/create-user';
+import { DateTime } from 'luxon';
+import { UserBuilder } from '../shared/builders/user.builder';
 import { createDummyUsersForOperatorPrecedence } from '../shared/dummy/user.dummy';
 import { cleanup } from '../shared/utils/cleanup.util';
-import { findManyUsers } from './find-many';
+import { UserRepository } from './find-many';
 
-describe('findMany', () => {
+describe('UserRepository - findManyUsers', () => {
+  let userRepository: UserRepository;
+
+  beforeAll(() => {
+    userRepository = new UserRepository();
+  });
+
   it('should return only one user', async () => {
     const email = 'random' + Date.now() + '@cia.jp';
-    await createUserUsingPrisma({
-      email,
-      firstName: 'random',
-      lastName: 'rand',
-    });
+    const userId = await new UserBuilder().setEmail(email).build();
 
-    const users = await findManyUsers({
+    const users = await userRepository.findManyUsers({
       where: {
         email,
       },
@@ -22,15 +25,14 @@ describe('findMany', () => {
     expect(users).toHaveLength(1);
     expect(users[0]).toStrictEqual(
       expect.objectContaining({
+        id: userId,
         email,
-        firstName: 'random',
-        lastName: 'rand',
       }),
     );
   });
 
   it('should return an array with no element', async () => {
-    const users = await findManyUsers({
+    const users = await userRepository.findManyUsers({
       where: {
         email: 'null@null.null',
       },
@@ -40,8 +42,11 @@ describe('findMany', () => {
   });
 });
 
-describe('findMany - Operator precedence', () => {
+describe('UserRepository - findManyUsers: Operator precedence', () => {
+  let userRepository: UserRepository;
+
   beforeAll(async () => {
+    userRepository = new UserRepository();
     await cleanup();
     await createDummyUsersForOperatorPrecedence();
   });
@@ -55,7 +60,7 @@ describe('findMany - Operator precedence', () => {
     // { OR: [{firstName: 'Kasir'}, { firstName: 'Mohammad Jawad' }], AND: { cityId: 'TYO' }}
     // { OR: [{ firstName: "Kasir" }, { firstName: "Mohammad Jawad" }], cityId: "TYO", }
 
-    const result = await findManyUsers({
+    const result = await userRepository.findManyUsers({
       where: {
         cityId: 'TYO',
         OR: [
@@ -74,6 +79,7 @@ describe('findMany - Operator precedence', () => {
         middleName: null,
         firstName: 'Kasir',
         id: expect.any(Number),
+        birthdate: expect.any(Date),
         email: 'asdoiunhcd@asdm.com',
       },
       {
@@ -82,8 +88,33 @@ describe('findMany - Operator precedence', () => {
         middleName: null,
         id: expect.any(Number),
         email: 'au123ASD@asd.com',
+        birthdate: expect.any(Date),
         firstName: 'Mohammad Jawad',
       },
     ]);
+  });
+});
+
+describe('UserRepository - findAllLegallyOfAgeUsers', () => {
+  let userRepository: UserRepository;
+
+  beforeAll(() => {
+    userRepository = new UserRepository();
+  });
+
+  it('should return all users who are older than 18', async () => {
+    const now = DateTime.now();
+    const eighteenYearsAgo = now
+      .set({ year: now.year - 18 })
+      .toJSDate();
+    const userId = await new UserBuilder()
+      .setBirthdate(eighteenYearsAgo)
+      .build();
+
+    const users = await userRepository.findAllLegallyOfAgeUsers();
+
+    expect(users.filter((user) => user.id === userId)).toHaveLength(
+      1,
+    );
   });
 });

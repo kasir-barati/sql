@@ -32,6 +32,7 @@
   "homepage": "https://github.com/kasir-barati/awesome-sql-orm#readme",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^22.1.0",
     "jest": "^29.7.0",
     "prettier": "^3.3.3",
@@ -42,7 +43,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "luxon": "^3.4.2"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

@@ -1,9 +1,9 @@
 import { User } from '@prisma/client';
-import { InsertUserUsingRawQuery } from '../types/user-raw-queries.type';
+import { UserDataRepresentationInDatabase } from '../types/user-raw-queries.type';
 
 export class UserRawQueryResultsSerializer {
   serializeInsertUserUsingRawQuery(
-    data: InsertUserUsingRawQuery,
+    data: UserDataRepresentationInDatabase,
   ): User {
     return {
       id: data.id,
@@ -12,11 +12,12 @@ export class UserRawQueryResultsSerializer {
       lastName: data.last_name,
       firstName: data.first_name,
       middleName: data.middle_name,
+      birthdate: data.birthdate,
     };
   }
 
   serializeSelectAllUsers(
-    data: Array<InsertUserUsingRawQuery>,
+    data: Array<UserDataRepresentationInDatabase>,
   ): User[] {
     return data.map((user) => ({
       id: user.id,
@@ -25,6 +26,7 @@ export class UserRawQueryResultsSerializer {
       lastName: user.last_name,
       firstName: user.first_name,
       middleName: user.middle_name,
+      birthdate: user.birthdate,
     }));
   }
 }
