@@ -76,3 +76,14 @@
 - `github.run_id`:
   - A unique number for each workflow run within a repository.
   - This number **does NOT** change if you re-run the workflow run.
+
+# Expressions
+
+- An expression can be any combination of literal values, references to a context, or functions.
+- Commonly used with the conditional `if` keyword in a workflow file to determine whether a step should run.
+- `${{ <expression> }}`
+  - In an `if` clause, where, optionally, you can usually omit `${{` and `}}`.
+
+## Status check function - `success()`
+
+- Returns `true` when all previous steps have succeeded.
