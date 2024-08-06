@@ -43,6 +43,8 @@ You can find a complete list [here](https://www.prisma.io/docs/orm/reference/pri
 
 ## `lte` operator
 
+Learn more about whether to choose ORM or just write raw SQL by reading [this informative post](https://dev.to/kasir-barati/postgresql-interval-data-type-or-orm-156h).
+
 | ORM                                                                                                                         | PSQL                                                                                                                          |
 | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | https://github.com/kasir-barati/awesome-sql-orm/blob/67b87fc85b6c5f16dca6396e4aa59c4530221ca1/src/read/find-many.ts#L11-L22 | https://github.com/kasir-barati/awesome-sql-orm/blob/67b87fc85b6c5f16dca6396e4aa59c4530221ca1/src/read/select-user.ts#L23-L31 |
