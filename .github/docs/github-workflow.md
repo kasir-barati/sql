@@ -17,6 +17,10 @@
 
 \- [Ref](https://about.gitlab.com/topics/ci-cd/continuous-integration-best-practices/)
 
+> [!TIP]
+>
+> [How to use docker compose in CI](https://stackoverflow.com/q/29568352/8784518).
+
 # `name`
 
 - The name of the workflow.

@@ -38,7 +38,7 @@ jobs:
       - name: Create .env file
         run: cp .env.example .env
       - name: Starting containers
-        run: docker compose up --build
+        run: docker compose up --build --exit-code-from app
         env:
           DATABASE_URL: postgresql://postgres:123456@postgres:5432/mydb?schema=main
           WORKDIR: /app
