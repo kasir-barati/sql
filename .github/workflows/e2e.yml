@@ -23,6 +23,8 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' ||
       github.event_name == 'workflow_dispatch' && inputs.run_e2e_tests == true }}
     steps:
+      - name: Clone awesome-sql-orm repo in Ubuntu
+        uses: actions/checkout@v4
       - name: Set commit status to pending
         uses: ./.github/actions/change-commit-state
         with:
@@ -31,8 +33,6 @@ jobs:
           server_url: ${{ github.server_url }}
           repository: ${{ github.repository }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Clone awesome-sql-orm repo in Ubuntu
-        uses: actions/checkout@v4
       - name: Setup docker
         uses: ./.github/actions/setup-docker-composite
       - name: Starting containers
