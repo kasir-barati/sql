@@ -127,7 +127,7 @@
 
 ### `jobs.job_ID.steps`
 
-### `jobs.job_ID.steps[index].uses`
+### `jobs.job_ID.steps[*].uses`
 
 - A reusable unit of code.
 - Use:
@@ -147,6 +147,15 @@
       |               └── action.yml
       ```
 - **Specify the version**.
+
+### `jobs.job_ID.steps[*].run`
+
+- Runs command-line programs.
+- No longer than 21,000 characters.
+- Uses the operating system's shell.
+- Non-login shells by default.
+- A new process and shell in the runner environment.
+- Multi-line commands run in the same shell.
 
 # Secrets
 

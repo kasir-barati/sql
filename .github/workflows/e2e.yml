@@ -35,6 +35,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup docker
         uses: ./.github/actions/setup-docker-composite
+      - name: Create .env file
+        run: cp .env.example .env
       - name: Starting containers
         run: docker compose up --build
         env:
