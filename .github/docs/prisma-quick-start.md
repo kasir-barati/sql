@@ -36,3 +36,13 @@ When we do not need to change anything in the automated procedures that prisma w
 When we need to do som tweaks to the generated SQL queries or other stuff.
 
 1. `prisma migrate dev --create-only --name whatever`.
+
+# Filter data in Prisma (adding `where` clause)
+
+You can find a complete list [here](https://www.prisma.io/docs/orm/reference/prisma-client-reference#filter-conditions-and-operators)
+
+## `lte` operator
+
+| ORM                                                                                                                         | PSQL                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| https://github.com/kasir-barati/awesome-sql-orm/blob/67b87fc85b6c5f16dca6396e4aa59c4530221ca1/src/read/find-many.ts#L11-L22 | https://github.com/kasir-barati/awesome-sql-orm/blob/67b87fc85b6c5f16dca6396e4aa59c4530221ca1/src/read/select-user.ts#L23-L31 |
