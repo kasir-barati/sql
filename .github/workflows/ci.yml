@@ -25,12 +25,9 @@ jobs:
       - name: Clone awesome-sql-orm repo in Ubuntu
         uses: actions/checkout@v4
       - name: Set commit status to pending
-        uses: guibranco/github-status-action-v2@v1.1.13
+        uses: ./.github/actions/commit-state
         with:
           state: pending
-          context: set The commit status
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -48,9 +45,6 @@ jobs:
         run: pnpm test:unit
       - name: Set commit status to success
         if: ${{ success() }}
-        uses: guibranco/github-status-action-v2@v1.1.13
+        uses: ./.github/actions/commit-state
         with:
           state: success
-          context: set The commit status
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

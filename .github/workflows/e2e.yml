@@ -1,0 +1,53 @@
+name: E2E Tests
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: ["main"]
+    type:
+      - completed
+  workflow_dispatch:
+    inputs:
+      run_e2e_tests:
+        description: Run E2D tests
+        required: false
+        type: boolean
+
+env:
+  NODE_ENV: test
+
+jobs:
+  run-e2e-tests:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    if: ${{ github.event.workflow_run.conclusion == 'success' ||
+      github.event_name == 'workflow_dispatch' && inputs.run_e2e_tests == true }}
+    steps:
+      - name: Set commit status to pending
+        uses: ./.github/actions/commit-state
+        with:
+          state: pending
+      - name: Clone awesome-sql-orm repo in Ubuntu
+        uses: actions/checkout@v4
+      - name: Setup docker
+        uses: ./.github/actions/setup-docker-composite
+      - name: Starting containers
+        run: docker compose up --build
+        env:
+          DATABASE_URL: postgresql://postgres:123456@postgres:5432/mydb?schema=main
+          NODE_ENV: development
+          WORKDIR: /app
+          PGADMIN_EXPOSED_PORT: 1929
+          POSTGRES_EXPOSED_PORT: 5432
+          POSTGRES_PASSWORD: 123456
+          POSTGRES_USER: postgres
+          POSTGRES_DB: mydb
+          PGDATA: /var/lib/postgresql/data/pgdata
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+      - name: Set commit status to success
+        if: ${{ success() }}
+        uses: ./.github/actions/commit-state
+        with:
+          state: success

@@ -1,0 +1,19 @@
+name: Composite action - commit state
+description: Set commit state to what is passed on to it
+
+inputs:
+  state:
+    type: string
+    required: true
+    description: Targeted state
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set commit state to "${{ inputs.state }}"
+      uses: guibranco/github-status-action-v2@v1.1.13
+      with:
+        state: pending
+        context: set The commit status
+        authToken: ${{ secrets.GITHUB_TOKEN }}
+        target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

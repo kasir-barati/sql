@@ -17,16 +17,109 @@
 
 \- [Ref](https://about.gitlab.com/topics/ci-cd/continuous-integration-best-practices/)
 
+# `name`
+
+- The name of the workflow.
+- Displayed as the names of your workflows under your repository's "Actions" tab.
+- If omitted, GitHub displays the workflow file path.
+
+# `on`
+
+- Automatically triggers a workflow.
+- Trigger a workflow when:
+  - A single or multiple events occurred.
+  - A time schedule was fulfilled.
+- Restrict the execution of a workflow to only occur for specific:
+  - Files.
+  - Tags.
+  - Branch changes.
+
+## `on.workflow_run`
+
+- Specify what branches the triggering workflow must run on in order to trigger this workflow.
+
+### `on.workflow_run.branches`
+
+- Accept glob patterns: `*`, `+`, `**`, `?` + `!`.
+
+## `on.workflow_dispatch`
+
+- Optionally specify inputs that are passed to the workflow.
+- Receives events when the workflow file is on the default branch.
+
+### `on.workflow_dispatch.inputs`
+
+- Preserves Boolean values as Booleans instead of converting them to strings.
+- Maximum number of top-level properties: 10.
+- Maximum payload for inputs: 65,535 characters.
+
+#### `on.workflow_dispatch.inputs.input_ID.description`
+
+- I did not find it [here](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs). Thus I am not sure if this is a standard one.
+- But its name is self explanatory. It describes the input.
+
+#### `on.workflow_dispatch.inputs.input_ID.required`
+
+- A boolean specifying whether the input must be supplied.
+
+#### `on.workflow_dispatch.inputs.input_ID.type`
+
+- A string specifying the data type of the input.
+- Options: `boolean`, `choice`, `number`, `environment` or `string`.
+
+# `env`
+
+- A map.
+- Available variables for steps of all jobs in the workflow.
+- Specificity: an environment variable defined in a step will override job and workflow environment variables with the same name, while the step executes.
+
 # `jobs`
+
+- They run in parallel by default.
+- To run jobs sequentially, you can define dependencies on other jobs using the `jobs.job_ID.needs`.
+- Runs in a runner environment specified by `runs-on`.
 
 ## `jobs.job_ID`
 
-## `jobs.job_ID.strategy`
+- A unique identifier: `jobs.job_ID`.
+- A string.
+- A map of the job's configuration data.
+- Must start with a letter or `_`.
+- Contains only alphanumeric characters, `-`, or `_`.
+
+### `jobs.job_ID.runs-on`
+
+- Defines the type of machine to run the job on.
+- Options:
+  - Larger runner.
+  - Self-hosted runner.
+  - [GitHub-hosted runner](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories).
+- Provide `runs-on` as:
+  - A single string, e.g. `runs-on: ubuntu-22.04`
+  - A single variable containing a string.
+  - An array of strings, e.g. `runs-on: [self-hosted, linux, x64, gpu]`.
+  - An array of variables containing strings.
+  - An array of strings and variables, e.g. `runs-on: [self-hosted, "${{ inputs.chosen-os }}"]`.
+  - A `key-value` pair.
+
+### `jobs.job_ID.timeout-minutes`
+
+- For how long a job run before GitHub automatically cancels it.
+- Default: 360 minutes.
+- `GITHUB_TOKEN` expires when a job finishes or after 24 hours. For self-hosted runners, the token may be the limiting factor if the job timeout is greater than 24 hours.
+
+### `jobs.job_ID.if`
+
+- Prevent a job from running unless a condition is met.
+- Is evaluated before `jobs.job_ID.strategy.matrix` is applied. Meaning we cannot define condition here as to prevent the job from being executed for a specific matrix. We need to do it probably at the steps level.
+- E.g. `if: github.repository == 'octo-org/octo-repo-prod'`
+
+### `jobs.job_ID.strategy`
 
 - Use variables in a single job definition to automatically create multiple job runs that are based on the combinations of the variables.
 - E.g. use a matrix strategy to test your code in multiple versions of a language or on multiple operating systems.
 
-### `jobs.job_ID.strategy.matrix`
+#### `jobs.job_ID.strategy.matrix`
 
 - Define one or more variables followed by an array of values.
 
@@ -86,4 +179,4 @@
 
 ## Status check function - `success()`
 
-- Returns `true` when all previous steps have succeeded.
+- Returns `true` when **all** previous steps have succeeded.

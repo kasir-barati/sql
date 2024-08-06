@@ -7,3 +7,5 @@
 ## [Raw queries](./raw-queries.md)
 
 ## [GitHub workflow](./github-workflow.md)
+
+## [GitHub composite action](./github-composite-action.md)
