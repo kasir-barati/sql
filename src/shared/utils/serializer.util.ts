@@ -1,5 +1,9 @@
 import { User } from '@prisma/client';
 import { UserDataRepresentationInDatabase } from '../types/user-raw-queries.type';
+import {
+  PrismaUsersCountInEachCityReturnType,
+  UsersCountInEachCity,
+} from '../types/user.type';
 
 export class UserRawQueryResultsSerializer {
   serializeInsertUserUsingRawQuery(
@@ -27,6 +31,17 @@ export class UserRawQueryResultsSerializer {
       firstName: user.first_name,
       middleName: user.middle_name,
       birthdate: user.birthdate,
+    }));
+  }
+}
+
+export class UserSerializer {
+  serializeUsersCountInEachCity(
+    data: PrismaUsersCountInEachCityReturnType[],
+  ): UsersCountInEachCity[] {
+    return data.map(({ _count, cityId }) => ({
+      cityId,
+      count: _count._all,
     }));
   }
 }

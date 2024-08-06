@@ -1,13 +1,7 @@
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
+import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { DateTime } from 'luxon';
 import { UserBuilder } from '../shared/builders/user.builder';
+import { prisma } from '../shared/utils/prisma-client.util';
 import { UserRawQueryResultsSerializer } from '../shared/utils/serializer.util';
 import { UserRepository } from './select-user';
 
@@ -19,12 +13,9 @@ describe('UserRepository - selectAllUsers', () => {
     userRawQueryResultsSerializer =
       new UserRawQueryResultsSerializer();
     userRepository = new UserRepository(
+      prisma,
       userRawQueryResultsSerializer,
     );
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should return all users', async () => {
@@ -53,12 +44,9 @@ describe('UserRepository - selectAllLegallyOfAgeUsers', () => {
     userRawQueryResultsSerializer =
       new UserRawQueryResultsSerializer();
     userRepository = new UserRepository(
+      prisma,
       userRawQueryResultsSerializer,
     );
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should return all users who are older than 18', async () => {
@@ -86,5 +74,37 @@ describe('UserRepository - selectAllLegallyOfAgeUsers', () => {
     await userRepository.selectAllLegallyOfAgeUsers();
 
     expect(serializeSelectAllUsersSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('UserRepository - usersCountInEachCity', () => {
+  let userRepository: UserRepository;
+  let userRawQueryResultsSerializer: UserRawQueryResultsSerializer;
+
+  beforeAll(() => {
+    userRawQueryResultsSerializer =
+      new UserRawQueryResultsSerializer();
+    userRepository = new UserRepository(
+      prisma,
+      userRawQueryResultsSerializer,
+    );
+  });
+
+  it('should return city id and how many user is in it', async () => {
+    await new UserBuilder().setCityId('HKG').build();
+    await new UserBuilder().setCityId('HKG').build();
+    await new UserBuilder().setCityId('HKG').build();
+    await new UserBuilder().setCityId('SIN').build();
+    await new UserBuilder().setCityId('SIN').build();
+    await new UserBuilder().setCityId('SIN').build();
+
+    const result = await userRepository.usersCountInEachCity();
+
+    expect(
+      result.find(({ cityId }) => cityId === 'HKG')?.count,
+    ).toBeGreaterThanOrEqual(3);
+    expect(
+      result.find(({ cityId }) => cityId === 'SIN')?.count,
+    ).toBeGreaterThanOrEqual(3);
   });
 });

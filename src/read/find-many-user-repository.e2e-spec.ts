@@ -1,15 +1,19 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { DateTime } from 'luxon';
 import { UserBuilder } from '../shared/builders/user.builder';
 import { createDummyUsersForOperatorPrecedence } from '../shared/dummy/user.dummy';
 import { cleanup } from '../shared/utils/cleanup.util';
+import { prisma } from '../shared/utils/prisma-client.util';
+import { UserSerializer } from '../shared/utils/serializer.util';
 import { UserRepository } from './find-many';
 
 describe('UserRepository - findManyUsers', () => {
   let userRepository: UserRepository;
+  let userSerializer: UserSerializer;
 
   beforeAll(() => {
-    userRepository = new UserRepository();
+    userSerializer = new UserSerializer();
+    userRepository = new UserRepository(prisma, userSerializer);
   });
 
   it('should return only one user', async () => {
@@ -44,9 +48,11 @@ describe('UserRepository - findManyUsers', () => {
 
 describe('UserRepository - findManyUsers: Operator precedence', () => {
   let userRepository: UserRepository;
+  let userSerializer: UserSerializer;
 
   beforeAll(async () => {
-    userRepository = new UserRepository();
+    userSerializer = new UserSerializer();
+    userRepository = new UserRepository(prisma, userSerializer);
     await cleanup();
     await createDummyUsersForOperatorPrecedence();
   });
@@ -97,9 +103,11 @@ describe('UserRepository - findManyUsers: Operator precedence', () => {
 
 describe('UserRepository - findAllLegallyOfAgeUsers', () => {
   let userRepository: UserRepository;
+  let userSerializer: UserSerializer;
 
   beforeAll(() => {
-    userRepository = new UserRepository();
+    userSerializer = new UserSerializer();
+    userRepository = new UserRepository(prisma, userSerializer);
   });
 
   it('should return all users who are older than 18', async () => {
@@ -116,5 +124,44 @@ describe('UserRepository - findAllLegallyOfAgeUsers', () => {
     expect(users.filter((user) => user.id === userId)).toHaveLength(
       1,
     );
+  });
+});
+
+describe('UserRepository - usersCountInEachCity', () => {
+  let userRepository: UserRepository;
+  let userSerializer: UserSerializer;
+
+  beforeAll(() => {
+    userSerializer = new UserSerializer();
+    userRepository = new UserRepository(prisma, userSerializer);
+  });
+
+  it('should return city id and how many user is in it', async () => {
+    await new UserBuilder().setCityId('TPE').build();
+    await new UserBuilder().setCityId('TPE').build();
+    await new UserBuilder().setCityId('TPE').build();
+    await new UserBuilder().setCityId('KUL').build();
+    await new UserBuilder().setCityId('KUL').build();
+    await new UserBuilder().setCityId('KUL').build();
+
+    const result = await userRepository.usersCountInEachCity();
+
+    expect(
+      result.find(({ cityId }) => cityId === 'TPE')?.count,
+    ).toBeGreaterThanOrEqual(3);
+    expect(
+      result.find(({ cityId }) => cityId === 'KUL')?.count,
+    ).toBeGreaterThanOrEqual(3);
+  });
+
+  it('should serialize data', async () => {
+    const serializeUsersCountInEachCitySpy = jest.spyOn(
+      userSerializer,
+      'serializeUsersCountInEachCity',
+    );
+
+    await userRepository.usersCountInEachCity();
+
+    expect(serializeUsersCountInEachCitySpy).toHaveBeenCalledTimes(1);
   });
 });
