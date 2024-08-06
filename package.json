@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "jest",
-    "test:e2e": "jest --config=jest-e2e.config.ts",
-    "compose:up": "docker compose -f dev.docker-compose.yml up -d",
-    "compose:down": "docker compose -f dev.docker-compose.yml down --remove-orphans"
+    "test:e2e": "jest --config=jest-e2e.config.ts"
   },
   "repository": {
     "type": "git",

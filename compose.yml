@@ -1,0 +1,41 @@
+services:
+  pgAdmin:
+    image: dpage/pgadmin4:8.1
+    restart: on-failure:3
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${PGADMIN_EXPOSED_PORT}:80"
+
+  postgres:
+    image: postgres:16.0-bookworm
+    restart: on-failure:3
+    volumes:
+      - postgres:/data/postgres
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: awesome-sql-orm-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        WORKDIR: ${WORKDIR}
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    logging:
+      driver: json-file
+
+volumes:
+  postgres:

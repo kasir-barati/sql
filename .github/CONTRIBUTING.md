@@ -1,12 +1,11 @@
 # How to run the App:
 
-1. `pnpm i --frozen-lockfile`.
-2. `cp .env.example .env`.
-3. `./e2e.sh`.
+1. `cp .env.example .env`.
+2. `docker compose up --build`.
 
 > [!NOTE]
 >
-> You can run unit tests with `pnpm test:unit`.
+> You can run unit tests with `pnpm test:unit`. But if you have not installed 3rd-party libs you need to do that first.
 
 # Upgrade 3rd-party packages to latest version:
 
