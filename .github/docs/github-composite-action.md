@@ -5,6 +5,10 @@
 - All actions require a metadata file.
 - The metadata filename must be either `action.yml` or `action.yaml`.
 
+> [!IMPORTANT]
+>
+> GitHub actions **do NOT** have access to the `github` context. [Read more about it here](https://stackoverflow.com/q/70098241/8784518).
+
 ## `name`
 
 - Required.

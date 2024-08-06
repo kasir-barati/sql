@@ -1,0 +1,35 @@
+name: Composite action - change commit state
+description: Set commit state to what is passed on to it
+
+inputs:
+  state:
+    type: string
+    required: true
+    description: Targeted state
+  server_url:
+    type: string
+    required: true
+    description: The URL of the GitHub server
+  repository:
+    type: string
+    required: true
+    description: The owner and repository name
+  run_id:
+    type: string
+    required: true
+    description: unique identifier for each workflow run within a repository
+  github_token:
+    type: string
+    required: true
+    description: The secret created byt GH to use in workflows
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set commit state to "${{ inputs.state }}"
+      uses: guibranco/github-status-action-v2@v1.1.13
+      with:
+        state: ${{ inputs.state }}
+        context: set The commit status
+        authToken: ${{ inputs.github_token }}
+        target_url: ${{ inputs.server_url }}/${{ inputs.repository }}/actions/runs/${{ inputs.run_id }}

@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ["Continuous Integration"]
     branches: ["main"]
-    type:
+    types:
       - completed
   workflow_dispatch:
     inputs:
@@ -24,9 +24,13 @@ jobs:
       github.event_name == 'workflow_dispatch' && inputs.run_e2e_tests == true }}
     steps:
       - name: Set commit status to pending
-        uses: ./.github/actions/commit-state
+        uses: ./.github/actions/change-commit-state
         with:
           state: pending
+          run_id: ${{ github.run_id }}
+          server_url: ${{ github.server_url }}
+          repository: ${{ github.repository }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Clone awesome-sql-orm repo in Ubuntu
         uses: actions/checkout@v4
       - name: Setup docker
@@ -48,6 +52,10 @@ jobs:
         uses: jwalton/gh-docker-logs@v2
       - name: Set commit status to success
         if: ${{ success() }}
-        uses: ./.github/actions/commit-state
+        uses: ./.github/actions/change-commit-state
         with:
           state: success
+          run_id: ${{ github.run_id }}
+          server_url: ${{ github.server_url }}
+          repository: ${{ github.repository }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
