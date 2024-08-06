@@ -1,0 +1,48 @@
+name: Continuous Integration
+
+env:
+  NODE_ENV: test
+
+on:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+    working-directory: src
+
+jobs:
+  app:
+    name: app
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+    steps:
+      - name: Clone awesome-sql-orm repo in Ubuntu
+        uses: actions/checkout@v4
+      - name: Set commit status to pending
+        uses: guibranco/github-status-action-v2@v1.1.13
+        with:
+          state: pending
+          context: set The commit status
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Use NodeJS ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --dev
+      - name: Check if the codebase is prettified
+        run: pnpm format:check
+      - name: Unit test
+        run: pnpm test:unit

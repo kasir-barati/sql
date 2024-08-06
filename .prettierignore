@@ -5,6 +5,7 @@
 Docker*
 **/*.tsbuildinfo
 mockServiceWorker.js
+pnpm-lock.yaml
 
 .DS_STORE
 

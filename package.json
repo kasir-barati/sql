@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "jest",
-    "test:e2e": "jest --config=jest-e2e.config.ts"
+    "test:e2e": "jest --config=jest-e2e.config.ts",
+    "format": "prettier -w . -u",
+    "format:check": "prettier . --check"
   },
   "repository": {
     "type": "git",
