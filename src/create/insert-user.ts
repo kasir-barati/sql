@@ -1,5 +1,4 @@
-import { Prisma } from '@prisma/client';
-import { UserDataRepresentationInDatabase } from '../shared/types/user-raw-queries.type';
+import { Prisma, User } from '@prisma/client';
 import { ErrorSerializer } from '../shared/utils/error-serializer.util';
 import { prisma } from '../shared/utils/prisma-client.util';
 import { UserRawQueryResultsSerializer } from '../shared/utils/serializer.util';
@@ -11,9 +10,7 @@ export class UserRepository {
   ) {}
 
   async insertUserUsingRawQuery(user: Prisma.UserCreateArgs['data']) {
-    const result = await prisma.$queryRaw<
-      UserDataRepresentationInDatabase[]
-    >`
+    const result = await prisma.$queryRaw<User[]>`
     INSERT INTO users(email, first_name, middle_name, last_name, birthdate) 
     VALUES(
       ${user.email},
@@ -22,7 +19,7 @@ export class UserRepository {
       ${user.lastName},
       ${user.birthdate}
     )
-    RETURNING id, email, first_name, middle_name, last_name, birthdate;
+    RETURNING id, email, first_name AS "firstName", middle_name AS "middleName", last_name AS "lastName", birthdate;
   `.catch((error) => {
       this.errorSerializer.duplicateEmail(error);
       this.errorSerializer.unknown(error);
@@ -32,8 +29,6 @@ export class UserRepository {
       throw 'empty result!';
     }
 
-    return this.userRawQueryResultsSerializer.serializeInsertUserUsingRawQuery(
-      result[0],
-    );
+    return result[0];
   }
 }

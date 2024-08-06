@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import { UserDataRepresentationInDatabase } from '../shared/types/user-raw-queries.type';
+import { PrismaClient, User } from '@prisma/client';
 import { UsersCountInEachCity } from '../shared/types/user.type';
 import { UserRawQueryResultsSerializer } from '../shared/utils/serializer.util';
 
@@ -10,25 +9,18 @@ export class UserRepository {
   ) {}
 
   async selectAllUsers() {
-    const result = await this.prisma.$queryRaw<
-      Array<UserDataRepresentationInDatabase>
-    >`SELECT * FROM users;`;
-    const users =
-      this.userRawQueryResultsSerializer.serializeSelectAllUsers(
-        result,
-      );
+    const users = await this.prisma.$queryRaw<Array<User>>`
+    SELECT id, email, first_name AS "firstName", middle_name AS "middleName", last_name AS "lastName", birthdate
+    FROM users;`;
 
     return users;
   }
 
   async selectAllLegallyOfAgeUsers() {
-    const result = await this.prisma.$queryRaw<
-      UserDataRepresentationInDatabase[]
-    >`SELECT * FROM users where birthdate <= NOW() - INTERVAL '18 years'`;
-    const users =
-      this.userRawQueryResultsSerializer.serializeSelectAllUsers(
-        result,
-      );
+    const users = await this.prisma.$queryRaw<User[]>`
+    SELECT id, email, first_name AS "firstName", middle_name AS "middleName", last_name AS "lastName", birthdate
+    FROM users 
+    WHERE birthdate <= NOW() - INTERVAL '18 years'`;
 
     return users;
   }
