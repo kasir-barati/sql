@@ -1,7 +1,10 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 import { UniqueEmailConstraints } from '../shared/types/unique-email-constraints.type';
 import { cleanup } from '../shared/utils/cleanup.util';
-import { generateRandomDate } from '../shared/utils/random.util';
+import {
+  generateRandomDate,
+  generateRandomNumber,
+} from '../shared/utils/random.util';
 import { createUserUsingPrisma } from './create-user';
 
 describe('createUserUsingPrisma', () => {
@@ -41,4 +44,30 @@ describe('createUserUsingPrisma', () => {
 
     await expect(result).rejects.toThrowError(UniqueEmailConstraints);
   });
+
+  it.each<{ [x: string]: string }>([
+    { middleName: '   middle' },
+    { email: 'm.test@il.co    ' },
+    { firstName: '   Mohammad    ' },
+    { lastName: ' family ' },
+  ])(
+    'should sanitize data before inserting it: : %p',
+    async (unsanitizedData) => {
+      const sanitizedData = Object.values(unsanitizedData)[0].trim();
+
+      const user = (await createUserUsingPrisma({
+        birthdate: generateRandomDate(),
+        email: 'e' + generateRandomNumber(4) + '@uu.cn',
+        cityId: 'MUC',
+        firstName: 'some thing',
+        lastName: 'another thing',
+        middleName: 'professed child',
+        ...unsanitizedData,
+      })) as any;
+
+      expect(user[Object.keys(unsanitizedData)[0]]).toBe(
+        sanitizedData,
+      );
+    },
+  );
 });

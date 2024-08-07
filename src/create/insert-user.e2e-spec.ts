@@ -2,7 +2,10 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { UniqueEmailConstraints } from '../shared/types/unique-email-constraints.type';
 import { cleanup } from '../shared/utils/cleanup.util';
 import { ErrorSerializer } from '../shared/utils/error-serializer.util';
-import { generateRandomDate } from '../shared/utils/random.util';
+import {
+  generateRandomDate,
+  generateRandomNumber,
+} from '../shared/utils/random.util';
 import { UserRawQueryResultsSerializer } from '../shared/utils/serializer.util';
 import { UserRepository } from './insert-user';
 
@@ -56,4 +59,30 @@ describe('UserRepository', () => {
 
     await expect(result).rejects.toThrowError(UniqueEmailConstraints);
   });
+
+  it.each<{ [x: string]: string }>([
+    { middleName: '   middle' },
+    { email: 'm12test@lv.om    ' },
+    { firstName: '   Mohammad    ' },
+    { lastName: ' family ' },
+  ])(
+    'should sanitize data before inserting it: %p',
+    async (unsanitizedData) => {
+      const sanitizedData = Object.values(unsanitizedData)[0].trim();
+
+      const user = (await userRepository.insertUserUsingRawQuery({
+        birthdate: generateRandomDate(),
+        email: 'kgb' + generateRandomNumber(4) + '@uu.ru',
+        cityId: 'MUC',
+        firstName: 'thing',
+        lastName: 'another',
+        middleName: 'coco',
+        ...unsanitizedData,
+      })) as any;
+
+      expect(user[Object.keys(unsanitizedData)[0]]).toBe(
+        sanitizedData,
+      );
+    },
+  );
 });

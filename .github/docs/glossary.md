@@ -21,6 +21,10 @@
       </li>
     </ul>
   </dd>
+  <dt id="databaseTrigger">
+    Database trigger:
+  </dt>
   <dd>
+    A database object that automatically calls a function when an event such as <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statement occurs on the <b>associated</b> table.
   </dd>
 </dl>
