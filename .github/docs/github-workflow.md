@@ -14,6 +14,7 @@
   - **Instead of** asking **who** caused the failure, **ask what** caused the failure.
   - Shift from a blaming culture to a learning culture.
 - Similar env for both production and test.
+- Since we wanna have a faster GitHub workflow we need husky to define very tedious, non-rewarding tasks as git hooks in order to prevent failing GitHub actions for reasons such as prettier.
 
 \- [Ref](https://about.gitlab.com/topics/ci-cd/continuous-integration-best-practices/)
 
