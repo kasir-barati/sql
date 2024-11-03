@@ -1,12 +1,3 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { DateTime } from 'luxon';
-import { UserBuilder } from '../shared/builders/user.builder';
-import { createDummyUsersForOperatorPrecedence } from '../shared/dummy/user.dummy';
-import { cleanup } from '../shared/utils/cleanup.util';
-import { prisma } from '../shared/utils/prisma-client.util';
-import { UserSerializer } from '../shared/utils/serializer.util';
-import { UserRepository } from './find-many';
-
 describe('UserRepository - findManyUsers', () => {
   let userRepository: UserRepository;
   let userSerializer: UserSerializer;

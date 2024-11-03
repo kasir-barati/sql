@@ -1,4 +1,3 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import { DateTime } from 'luxon';
 import { UserSerializer } from '../shared/utils/serializer.util';
 
