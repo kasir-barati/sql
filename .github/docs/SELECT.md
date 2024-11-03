@@ -4,7 +4,9 @@
 
 > [!CAUTION]
 >
-> <blockquote class="reddit-embed-bq" style="height:500px" data-embed-height="240"><a href="https://www.reddit.com/r/programming/comments/knlp8a/stop_using_offset_for_pagination_why_its_grossly/">Stop using offset for pagination - Why it's grossly inefficient</a><br> by <a href="https://www.reddit.com/user/fyzic/">u/fyzic</a> in <a href="https://www.reddit.com/r/programming/">programming</a></blockquote><script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
+> [Stop using offset for pagination - Why it's grossly inefficient](https://www.reddit.com/r/programming/comments/knlp8a/stop_using_offset_for_pagination_why_its_grossly/).
+>
+> By [u/fyzic](https://www.reddit.com/user/fyzic/) in [programming](https://www.reddit.com/r/programming/).
 
 - We have a table called "news_articles".
 
