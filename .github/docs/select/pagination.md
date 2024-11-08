@@ -247,6 +247,10 @@ ORDER BY published_at DESC, id DESC
 LIMIT 10;
 ```
 
+> [!CAUTION]
+>
+> Here we've assumed that id is auto increment (an integer). If you're like me, use UUID everywhere as your ID, then this probably is not your cup of tea.
+
 - A definite sort order is mandatory.
 - The second part of the `WHERE` clause is a [tuple comparison](../glossary.md#tupleComparison).
 
