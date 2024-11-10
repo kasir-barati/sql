@@ -3,7 +3,11 @@
 ## `OFFSET` implementation
 
 - `OFFSET` instructs the database to skip the first N results of a query.
-- When we do **NOT** specify it it is equal to 0;
+- We need to calculate all the pages and return these infos too;
+  - `lastPage`.
+  - `limit`.
+  - `skip` or `offset` itself.
+- When we do **NOT** specify it, it is equal to 0;
 
 - We have a table called "news_articles".
 
@@ -85,18 +89,18 @@
 SELECT *, (total / 10::double precision)::int AS "totalPage"
 FROM (
   SELECT
-    (SELECT COUNT(id) FROM public.news_articles) AS "total",
-    (
-      SELECT JSON_AGG(TO_JSONB(filtered_news_articles))
-      FROM (
-	    	SELECT *
-		    FROM public.news_articles
-		    WHERE title LIKE '%something%'
-            ORDER BY created_at ASC
-	    	OFFSET 0
-	    	LIMIT 10
-	    ) as "filtered_news_articles"
-	  ) AS "data"
+    (SELECT COUNT(id)
+     FROM public.news_articles
+    ) AS "total",
+    (SELECT JSON_AGG(TO_JSONB(filtered_news_articles))
+     FROM (SELECT *
+           FROM public.news_articles
+           WHERE title LIKE '%something%'
+           ORDER BY created_at ASC
+           OFFSET 0
+           LIMIT 10
+          ) as "filtered_news_articles"
+    ) AS "data"
 );
 ```
 
@@ -230,6 +234,10 @@ As you can see the bigger the dataset we have after `WHERE` clause the more time
 
 ## `WHERE` implementation
 
+### First variation
+
+In this variation we do not construct the next page in our query/backend. So client has to make a request to the backend, and if we returned an empty array then our frontend realizes that that we were at the last page. This might be good in one scenario, when we are sure until user reaches the end of the current page we're gonna have a new page for sure.
+
 Here we are first starting without indexing `published_at` field.
 
 ```sql
@@ -266,6 +274,36 @@ Since we are no longer fetching lots of data just to sort (`ORDER BY`) and then 
 > [!TIP]
 >
 > If we index the `published_at` too then we are gonna have a much lower response time.
+
+### Second variation
+
+Here we compute and render the next page's query before hand and send it back to our client. Something like this:
+
+```sql
+SELECT
+  (SELECT count.count
+   FROM (SELECT COUNT(id), created_at
+	       FROM public.messages
+	       WHERE sender_id = '' AND receiver_id = ''
+	       GROUP BY created_at, id
+	       ORDER BY created_at ASC LIMIT 10
+        ) as count
+  ),
+  (SELECT JSON_AGG(TO_JSONB(messages))
+   FROM (SELECT *
+      	 FROM public.messages
+      	 WHERE sender_id = '' AND receiver_id = ''
+         ORDER BY created_at ASC
+         LIMIT 10
+        ) as messages
+  ) as data
+;
+```
+
+- Note that here because we are using `COUNT` which is an [aggregate function](../glossary.md#aggregateFunction) we need to use `GROUP BY` too. In PostgreSQL, when you use an aggregate function, any non-aggregated columns in the `SELECT` clause must either:
+  - Appear in a `GROUP BY` clause.
+  - Be wrapped in an aggregate function as well. And to have an accurate result I said to `GROUP BY` both `id` and `created_at`.
+- Because our first subquery returns two column we nested it once more to just return the computed count in which we are interested.
 
 ## Seek method VS `OFFSET`
 

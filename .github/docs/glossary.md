@@ -47,4 +47,11 @@
     There are some gotchas when you have <code>NULL</code> values.
     <a href="https://www.postgresql.org/message-id/53EB40A3.9010708@ibotty.net">Read this for more info</a>.
   </dd>
+  <dt id="aggregateFunction">
+    <a href="#aggregateFunction">#</a>
+    Aggregate function
+  </dt>
+  <dd>
+    Computes a single result from multiple input rows.
+  </dd>
 </dl>
