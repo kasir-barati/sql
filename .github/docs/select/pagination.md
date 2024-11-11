@@ -257,10 +257,11 @@ LIMIT 10;
 
 > [!CAUTION]
 >
-> Here we've assumed that id is auto increment (an integer). If you're like me, use UUID everywhere as your ID, then this probably is not your cup of tea.
-
-- A definite sort order is mandatory.
-- The second part of the `WHERE` clause is a [tuple comparison](../glossary.md#tupleComparison).
+> Here we've assumed that:
+>
+> - `id` is auto increment (an integer). If you're like me (use UUID everywhere as your ID) it is not gonna pose any form of issue [AMAIK](https://dba.stackexchange.com/q/267794/242569).
+> - A definite sort order is mandatory.
+> - The second part of the `WHERE` clause is a [tuple comparison](../glossary.md#tupleComparison) and it **MUST** be implemented that way. If you declare them as two filters, implemented independently then it would result in most rows failing to show up at all. You need to implement the `id` filter only within ties of the `created_at` filter.
 
 ![Seek method implementation visualization](../assets/seek-method.gif)
 
