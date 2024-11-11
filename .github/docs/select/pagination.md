@@ -306,6 +306,10 @@ SELECT
   - Be wrapped in an aggregate function as well. And to have an accurate result I said to `GROUP BY` both `id` and `created_at`.
 - Because our first subquery returns two column we nested it once more to just return the computed count in which we are interested.
 
+> ![CAUTION]
+>
+> This query might return null as value for both columns. Thus you need to handle it gently. IDK, define default values or whatever suits your situation best.
+
 ## Seek method VS `OFFSET`
 
 ![OFFSET vs seek method](../assets/offset-vs-seek-method.gif)
