@@ -28,49 +28,49 @@ Of course by using `WITH` clause ;). You can reference the result of a subquery 
 
 ```sql
 WITH messages AS (
-	SELECT *
-	FROM public.messages
-	WHERE sender_id = '754cf10b-d3a3-4851-af9a-11ad51dc8357'
-		    AND receiver_id = 'b9e0c6b9-4c7f-441f-b6cc-1cf6521c141b'
+  SELECT *
+  FROM public.messages
+  WHERE sender_id = '754cf10b-d3a3-4851-af9a-11ad51dc8357'
+        AND receiver_id = 'b9e0c6b9-4c7f-441f-b6cc-1cf6521c141b'
         -- But if user is request the very first page we are not gonna add this condition
         -- AND (created_at, id) < (previous_created_at, previous_id)
-	ORDER BY created_at DESC, id DESC
-	LIMIT 10
+  ORDER BY created_at DESC, id DESC
+  LIMIT 10
 ), last_message AS (
-	SELECT *
-	FROM messages
+  SELECT *
+  FROM messages
   -- Note how we are reversing our sorting here to get the last message!
-	ORDER BY created_at ASC, id ASC
+  ORDER BY created_at ASC, id ASC
   -- Through LIMIT clause we're retrieving the last message.
-	LIMIT 1
+  LIMIT 1
 ), next_page_count AS (
-	SELECT count.count
-	FROM (SELECT COUNT(public.messages.id), public.messages.created_at
+  SELECT count.count
+  FROM (SELECT COUNT(public.messages.id), public.messages.created_at
         -- Notice that we have joined these two tables in order to be able to calculate whether there is anything else that user might wanna fetch in their next request.
-		    FROM public.messages, last_message
-		    WHERE public.messages.sender_id = '754cf10b-d3a3-4851-af9a-11ad51dc8357'
-		    	    AND public.messages.receiver_id = 'b9e0c6b9-4c7f-441f-b6cc-1cf6521c141b'
+        FROM public.messages, last_message
+        WHERE public.messages.sender_id = '754cf10b-d3a3-4851-af9a-11ad51dc8357'
+              AND public.messages.receiver_id = 'b9e0c6b9-4c7f-441f-b6cc-1cf6521c141b'
               AND (public.messages.created_at, public.messages.id) < (last_message.created_at, last_message.id)
         -- Since we needed to sort them first and we where using an aggregate function we had to do a GROUP BY.
         GROUP BY public.messages.created_at, public.messages.id
         ORDER BY public.messages.created_at DESC, public.messages.id DESC
-		    LIMIT 10
-		 ) AS count
+        LIMIT 10
+       ) AS count
 )
 SELECT
   -- Here we'll aggregate all messages under a single column called data.
- 	(SELECT JSONB_AGG(TO_JSONB(messages))
+  (SELECT JSONB_AGG(TO_JSONB(messages))
    FROM (SELECT *
- 	  	   FROM messages
- 	      ) as messages
- 	) AS data
+         FROM messages
+        ) as messages
+  ) AS data
   -- Now in our app we can determine whether there will be a next page;
   -- I.e. if the "count" is null then we know that there won't be a next page.
   -- Otherwise there will be at least one.
   -- And as for the next page's query string they just need to send the last message's created_at and id as cursor. You can take care of that in your backend too.
-	(SELECT *
-	 FROM next_page_count
-	) AS count
+  (SELECT *
+   FROM next_page_count
+  ) AS count
 ;
 ```
 
