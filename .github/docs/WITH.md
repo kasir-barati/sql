@@ -45,6 +45,15 @@ WITH messages AS (
   LIMIT 1
 ), next_page_count AS (
   SELECT count.count
+  --
+  --  !!!!!! BUGGY !!!!!!
+  --
+  -- This part is buggy. Look at this for a bug free version: https://github.com/kasir-barati/react/blob/417d147f19ea3918bf443f33aafbd2045c898326/apps/api/src/repositories/message.repository.ts#L26-L66
+  --
+  -- Since the subquery can return more that one row thanks to GROUP BY. So my intentions was to count all rows and not each group (BTW grouping is not the issue here, I mean it is fine that we have several rows). So I had to get rid of GROUP BY but I needed to keep the ORDER BY. So what we can do is to extract all ids in a separate CTE and count it next.
+  --
+  -- Error message: "Raw query failed. Code: `21000`. Message: `ERROR: more than one row returned by a subquery used as an expression`"
+  --
   FROM (SELECT COUNT(public.messages.id), public.messages.created_at
         -- Notice that we have joined these two tables in order to be able to calculate whether there is anything else that user might wanna fetch in their next request.
         FROM public.messages, last_message
@@ -74,7 +83,7 @@ SELECT
 ;
 ```
 
-Here we optimized and improved the readability of our SQL query by a ton.
+Here we optimized and improved the readability of our SQL query by a ton. [Here](https://github.com/kasir-barati/react/blob/417d147f19ea3918bf443f33aafbd2045c898326/apps/api/src/repositories/message.repository.ts#L26-L66) you can see how it is done in Prisma.
 
 ## Ref
 
