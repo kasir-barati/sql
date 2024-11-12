@@ -6,4 +6,5 @@ Originally this was a repo I've created while I was working at [Spad](https://ww
 
 ## Docs
 
+- [`WITH`](./docs/WITH.md).
 - [`SELECT`](./docs/SELECT.md).

@@ -1,5 +1,9 @@
 # Pagination
 
+> [!TIP]
+>
+> To have a more readable query you can also try to use [CTEs](../WITH.md). But here we just used subqueries whenever possible.
+
 ## `OFFSET` implementation
 
 - `OFFSET` instructs the database to skip the first N results of a query.
