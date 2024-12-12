@@ -45,3 +45,4 @@ TK
 ## Ref
 
 - [https://youtu.be/aQrQnNvJguA?si=DLBHf_v9jbv81v8M](https://youtu.be/aQrQnNvJguA?si=DLBHf_v9jbv81v8M).
+- [ryanbooz/Presentations](https://github.com/ryanbooz/Presentations/tree/master/Bulk%20Inserts%20with%20PostgreSQL).
