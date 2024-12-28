@@ -152,7 +152,7 @@ This query will return something like this if you wanted to see it in plain JSON
 
 The root cause of this issue lies in the fact that we are only telling database how many records should be dropped. No more. And, well this is not very much context.
 
-Thus after seeing how we can implement it with OFFSET we're gonna discuss a [better option](#where-implementation).
+Thus after seeing how we can implement it with OFFSET we're gonna discuss a [better option](#where-implementation----cursor-based-pagination----seek-method).
 
 - We are working on a sorted data set (`ORDER BY...`).
 - We'll ask database to only returns from the point that we've seen last time:
@@ -234,9 +234,18 @@ As you can see the bigger the dataset we have after `WHERE` clause the more time
 
   As you can see, fetching the first pages is snappy, but response time increases as you go further back.
 
-- But there is a better solution to this issue and that is using a ["seek method"](#where-implementation).
+- But there is a better solution to this issue and that is using a ["seek method"](#where-implementation----cursor-based-pagination----seek-method).
 
-## `WHERE` implementation
+<img alt="divider" src="./assets/divider.svg" />
+
+## `WHERE` Implementation -- Cursor-Based Pagination -- Seek Method
+
+Jargons:
+
+- A cursor is a tool that helps you navigate through rows of data in a database query result. Imagine it as a marker that moves row by row through a table to check or update the data.
+- Keyset cursor:
+  - Uses a compound cursor.
+  - E.g. it can use `created_at` and `id`.
 
 ### First variation
 
@@ -313,6 +322,8 @@ SELECT
 > ![CAUTION]
 >
 > This query might return null as value for both columns. Thus you need to handle it gently. IDK, define default values or whatever suits your situation best.
+
+<img alt="divider" src="./assets/divider.svg" />
 
 ## Seek method VS `OFFSET`
 
