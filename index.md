@@ -5,6 +5,7 @@ Originally this was a repo I've created while I was working at [Spad](https://ww
 - [`WITH`](./docs/WITH.md).
 - [`SELECT`](./docs/select/index.md).
   - [Pagination -- Cursor-based & Numbered base](./docs/select/pagination.md).
+  - [Select top `n` customers of each shop in your database](./docs/select/select-top-n-customers-of-each-shop.md).
 - [`INSERT`](./docs/insert/README.md).
   - [Bulk `INSERT`](./docs/insert/bulk/README.md).
 - [Aggregate functions](./docs/aggregate-functions.md).
